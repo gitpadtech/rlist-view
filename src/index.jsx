@@ -1,34 +1,9 @@
 import React, { Component } from 'react';
+import classNames from 'classnames';
 import PropTypes from 'prop-types'
 import './index.css';
+import RefreshComponent from './refresh-component';
 
-function preventWebviewBounceScrolling() {
-  // const root = document.documentElement;
-  
-  // let prevY = 0;
-  // root.addEventListener('touchstart', function(e) {
-  //   prevY = e.touches[0].pageY;
-  // });
-  // root.addEventListener('touchmove', function(e) {
-    // const scrollTop = window.pageYOffset ||
-    //   document.documentElement.scrollTop ||
-    //   document.body.scrollTop || 0;;
-    // const curY = e.touches[0].pageY;
-    // // drap up
-    // if (curY - prevY < 0) {
-    //   prevY = curY;
-    //   return;
-    // }
-    
-    // if (scrollTop <= 1) {
-    //   console.log(e.currentTarget, scrollTop);
-    //   e.preventDefault();
-    //   // document.body.innerText = scrollTop;
-    //   return ;
-    // }
-    // prevY = curY;
-  // }, { passive: false });
-}
 function isDragDown(prevY, curY) {
   return curY - prevY > 0;
 }
@@ -38,6 +13,7 @@ export default class RListView extends Component {
     super(props);
     this.state = {
       translateY: 0,
+      transition: false,
     };
     // bind this
     this.onTouchStart = this.onTouchStart.bind(this);
@@ -47,6 +23,7 @@ export default class RListView extends Component {
     this.startYPos = 0;
     this.prevYPos = 0;
     this.rootDom = null;
+    this.refreshDom = null;
   }
   componentDidMount() {
     this.rootDom.addEventListener('touchmove', this.onTouchMove, false);
@@ -69,7 +46,8 @@ export default class RListView extends Component {
   }
   onTouchEnd() {
     this.setState({
-      translateY: 0
+      translateY: this.refreshDom.clientHeight,
+      transition: true
     })
   }
   calcDistance(distance) {
@@ -82,22 +60,47 @@ export default class RListView extends Component {
       <div
         className="rlist-view-component"
         style={{
-          height: props.height,
-          transform: `translateY(${state.translateY}px)`
+          height: props.height
         }}
         ref={ref => this.rootDom = ref}
         onTouchStart={this.onTouchStart}
         onTouchEnd={this.onTouchEnd}
       >
-        { props.children }
+        <div
+          ref={ref => this.refreshDom = ref}
+          className={classNames('rlist-view-component__refresh', {
+            'ease-out-transion': state.transition
+          })}
+          style={{
+            transform: `translate3d(0,0${state.translateY}px,0)`,
+            top: this.refreshDom ? -this.refreshDom.clientHeight : 0
+          }}
+        >
+          { props.refreshComponent }
+        </div>
+
+        <div
+          className={classNames('rlist-view-component__content', {
+            'ease-out-transion': state.transition
+          })}
+          style={{
+            transform: `translate3d(0,0${state.translateY}px,0)`
+          }}
+        >
+          { props.children }
+        </div>
+
+
       </div>
     );
   }
 }
 
 RListView.defaultProps = {
+  refreshComponent: <RefreshComponent />
 };
 
 RListView.propTypes = {
   height: PropTypes.number.isRequired,
+  refreshComponent: PropTypes.element
 }

@@ -29,6 +29,7 @@
     "webpack": "^3.7.1"
   },
   "dependencies": {
+    "classnames": "^2.2.5",
     "css-loader": "^0.28.7",
     "prop-types": "^15.6.0",
     "shortid": "^2.2.8",

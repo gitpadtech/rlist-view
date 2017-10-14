@@ -1,4 +1,13 @@
 .rlist-view-component {
   overflow-y: scroll;
   -webkit-overflow-scrolling: touch;
+  position: relative;
+}
+
+.rlist-view-component__refresh {
+  position: absolute;
+}
+
+.ease-out-transion {
+  transition: transform .2s ease-out;
 }

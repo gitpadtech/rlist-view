@@ -22269,11 +22269,19 @@ var _react = __webpack_require__(3);
 
 var _react2 = _interopRequireDefault(_react);
 
+var _classnames = __webpack_require__(53);
+
+var _classnames2 = _interopRequireDefault(_classnames);
+
 var _propTypes = __webpack_require__(31);
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
 __webpack_require__(50);
+
+var _refreshComponent = __webpack_require__(52);
+
+var _refreshComponent2 = _interopRequireDefault(_refreshComponent);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -22283,33 +22291,6 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-function preventWebviewBounceScrolling() {
-  // const root = document.documentElement;
-
-  // let prevY = 0;
-  // root.addEventListener('touchstart', function(e) {
-  //   prevY = e.touches[0].pageY;
-  // });
-  // root.addEventListener('touchmove', function(e) {
-  // const scrollTop = window.pageYOffset ||
-  //   document.documentElement.scrollTop ||
-  //   document.body.scrollTop || 0;;
-  // const curY = e.touches[0].pageY;
-  // // drap up
-  // if (curY - prevY < 0) {
-  //   prevY = curY;
-  //   return;
-  // }
-
-  // if (scrollTop <= 1) {
-  //   console.log(e.currentTarget, scrollTop);
-  //   e.preventDefault();
-  //   // document.body.innerText = scrollTop;
-  //   return ;
-  // }
-  // prevY = curY;
-  // }, { passive: false });
-}
 function isDragDown(prevY, curY) {
   return curY - prevY > 0;
 }
@@ -22323,7 +22304,8 @@ var RListView = function (_Component) {
     var _this = _possibleConstructorReturn(this, (RListView.__proto__ || Object.getPrototypeOf(RListView)).call(this, props));
 
     _this.state = {
-      translateY: 0
+      translateY: 0,
+      transition: false
     };
     // bind this
     _this.onTouchStart = _this.onTouchStart.bind(_this);
@@ -22333,6 +22315,7 @@ var RListView = function (_Component) {
     _this.startYPos = 0;
     _this.prevYPos = 0;
     _this.rootDom = null;
+    _this.refreshDom = null;
     return _this;
   }
 
@@ -22365,7 +22348,8 @@ var RListView = function (_Component) {
     key: 'onTouchEnd',
     value: function onTouchEnd() {
       this.setState({
-        translateY: 0
+        translateY: this.refreshDom.clientHeight,
+        transition: true
       });
     }
   }, {
@@ -22385,16 +22369,42 @@ var RListView = function (_Component) {
         {
           className: 'rlist-view-component',
           style: {
-            height: props.height,
-            transform: 'translateY(' + state.translateY + 'px)'
+            height: props.height
           },
-          ref: function ref(_ref) {
-            return _this2.rootDom = _ref;
+          ref: function ref(_ref2) {
+            return _this2.rootDom = _ref2;
           },
           onTouchStart: this.onTouchStart,
           onTouchEnd: this.onTouchEnd
         },
-        props.children
+        _react2.default.createElement(
+          'div',
+          {
+            ref: function ref(_ref) {
+              return _this2.refreshDom = _ref;
+            },
+            className: (0, _classnames2.default)('rlist-view-component__refresh', {
+              'ease-out-transion': state.transition
+            }),
+            style: {
+              transform: 'translate3d(0,0' + state.translateY + 'px,0)',
+              top: this.refreshDom ? -this.refreshDom.clientHeight : 0
+            }
+          },
+          props.refreshComponent
+        ),
+        _react2.default.createElement(
+          'div',
+          {
+            className: (0, _classnames2.default)('rlist-view-component__content', {
+              'ease-out-transion': state.transition
+            }),
+            style: {
+              transform: 'translate3d(0,0' + state.translateY + 'px,0)'
+            }
+          },
+          props.children
+        )
       );
     }
   }]);
@@ -22405,10 +22415,13 @@ var RListView = function (_Component) {
 exports.default = RListView;
 
 
-RListView.defaultProps = {};
+RListView.defaultProps = {
+  refreshComponent: _react2.default.createElement(_refreshComponent2.default, null)
+};
 
 RListView.propTypes = {
-  height: _propTypes2.default.number.isRequired
+  height: _propTypes2.default.number.isRequired,
+  refreshComponent: _propTypes2.default.element
 };
 
 /***/ }),
@@ -22451,9 +22464,116 @@ exports = module.exports = __webpack_require__(37)(undefined);
 
 
 // module
-exports.push([module.i, ".rlist-view-component {\n  overflow-y: scroll;\n  -webkit-overflow-scrolling: touch;\n}", ""]);
+exports.push([module.i, ".rlist-view-component {\n  overflow-y: scroll;\n  -webkit-overflow-scrolling: touch;\n  position: relative;\n}\n\n.rlist-view-component__refresh {\n  position: absolute;\n}\n\n.ease-out-transion {\n  transition: transform .2s ease-out;\n}", ""]);
 
 // exports
+
+
+/***/ }),
+/* 52 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(3);
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var RefreshComponent = function (_Component) {
+  _inherits(RefreshComponent, _Component);
+
+  function RefreshComponent(props) {
+    _classCallCheck(this, RefreshComponent);
+
+    return _possibleConstructorReturn(this, (RefreshComponent.__proto__ || Object.getPrototypeOf(RefreshComponent)).call(this, props));
+  }
+
+  _createClass(RefreshComponent, [{
+    key: "render",
+    value: function render() {
+      return _react2.default.createElement(
+        "div",
+        { className: "refresh-component" },
+        "\u4E0B\u62C9\u5237\u65B0",
+        _react2.default.createElement("br", null),
+        "\u653E\u5F00\u624B"
+      );
+    }
+  }]);
+
+  return RefreshComponent;
+}(_react.Component);
+
+exports.default = RefreshComponent;
+
+/***/ }),
+/* 53 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
+  Copyright (c) 2016 Jed Watson.
+  Licensed under the MIT License (MIT), see
+  http://jedwatson.github.io/classnames
+*/
+/* global define */
+
+(function () {
+	'use strict';
+
+	var hasOwn = {}.hasOwnProperty;
+
+	function classNames () {
+		var classes = [];
+
+		for (var i = 0; i < arguments.length; i++) {
+			var arg = arguments[i];
+			if (!arg) continue;
+
+			var argType = typeof arg;
+
+			if (argType === 'string' || argType === 'number') {
+				classes.push(arg);
+			} else if (Array.isArray(arg)) {
+				classes.push(classNames.apply(null, arg));
+			} else if (argType === 'object') {
+				for (var key in arg) {
+					if (hasOwn.call(arg, key) && arg[key]) {
+						classes.push(key);
+					}
+				}
+			}
+		}
+
+		return classes.join(' ');
+	}
+
+	if (typeof module !== 'undefined' && module.exports) {
+		module.exports = classNames;
+	} else if (true) {
+		// register as 'classnames', consistent with npm package name
+		!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
+			return classNames;
+		}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	} else {
+		window.classNames = classNames;
+	}
+}());
 
 
 /***/ })
