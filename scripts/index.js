@@ -1,3 +1,9 @@
-import '../../src/index';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import NewsList from './news-list';
 
-console.log('hello vlist-view example');
+ReactDOM.render(
+  <NewsList />,
+  document.getElementById('app')
+);
+
