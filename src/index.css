@@ -1,0 +1,4 @@
+.rlist-view-component {
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+}

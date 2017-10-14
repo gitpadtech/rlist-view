@@ -7,12 +7,15 @@ module.exports = {
   entry: "./examples/scripts/index.js",
   output: {
     path: path.join(__dirname, "./examples/"),
-    filename: "modal.js"
+    filename: "dist.js"
+  },
+  resolve: {
+    extensions: ['.js', '.jsx'],
   },
   module: {
     loaders: [
       { test: /.jsx?$/,  loader: 'babel-loader',  exclude: /node_modules/,  query: {presets: ['es2015', 'react']}},
-      { test: /\.css$/, loader: "style!css" }
+      { test: /\.css$/, loader: "style-loader!css-loader" }
     ]
   }
 };

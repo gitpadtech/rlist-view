@@ -28,5 +28,10 @@
     "react-dom": "^16.0.0",
     "webpack": "^3.7.1"
   },
-  "dependencies": {}
+  "dependencies": {
+    "css-loader": "^0.28.7",
+    "prop-types": "^15.6.0",
+    "shortid": "^2.2.8",
+    "style-loader": "^0.19.0"
+  }
 }
