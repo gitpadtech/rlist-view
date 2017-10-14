@@ -1,0 +1,6 @@
+# Folders
+.idea/
+node_modules/
+
+# Files
+npm-debug.log
