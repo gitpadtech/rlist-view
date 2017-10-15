@@ -3,6 +3,13 @@ import './news-list.css';
 import RListView from '../../src/index';
 import shortid from 'shortid';
 
+function shuffle(a) {
+  for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
 
 export default class NewsList extends Component {
   constructor(props) {
@@ -10,15 +17,23 @@ export default class NewsList extends Component {
     this.state = {
       list: []
     }
+    this.refresh = this.refresh.bind(this);
   }
   componentDidMount() {
-    fetch('list.json')
+  }
+  refresh() {
+    return fetch('list.json')
       .then(res => res.json())
+      .then(res => {
+        return new Promise((resolve, reject) => {
+          setTimeout(() => resolve(res), 1000);
+        });
+      })
       .then(res => {
         res.forEach(raw => raw.id = shortid.generate());
         this.setState({
-          list: res
-        })
+          list: shuffle(res)
+        });
       });
   }
   render() {
@@ -27,6 +42,7 @@ export default class NewsList extends Component {
       <div>
         <RListView
           height={window.innerHeight}
+          refresh={this.refresh}
         >
           {
             state.list.map(item =>
