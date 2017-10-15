@@ -31,7 +31,7 @@ export default class NewsList extends Component {
           {
             state.list.map(item =>
               <div className="news-item" key={item.id}>
-                <h3 className="news-item__title">{item.title}</h3>
+                <h4 className="news-item__title">{item.title}</h4>
                 <div className="news-item__content">{item.content}</div>
               </div>
             )
