@@ -1,6 +1,6 @@
 # Folders
 .idea/
 node_modules/
-
+/dist
 # Files
 npm-debug.log
