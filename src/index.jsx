@@ -8,6 +8,10 @@ function isDragDown(prevY, curY) {
   return curY - prevY > 0;
 }
 
+function isIphone() {
+  return /iphone/i.test(window.navigator.userAgent);
+}
+
 export default class RListView extends Component {
   constructor(props) {
     super(props);
@@ -45,20 +49,32 @@ export default class RListView extends Component {
     this.prevYPos = curYpos
   }
   onTouchEnd() {
-    this.setState({
-      translateY: this.refreshDom.clientHeight,
-      transition: true
-    })
+    if (this.shouldRefresh()) {
+      this.setState({
+        translateY: this.refreshDom.clientHeight,
+        transition: true
+      });
+    } else {
+      this.setState({
+        translateY: 0,
+        transition: true
+      });
+    }
   }
   calcDistance(distance) {
     return distance / 3;
+  }
+  shouldRefresh() {
+    return this.state.translateY >= this.refreshDom.clientHeight;
   }
   render() {
     const props = this.props;
     const state = this.state;
     return (
       <div
-        className="rlist-view-component"
+        className={classNames('rlist-view-component', {
+          'ios-local-scroll-fix': isIphone()
+        })}
         style={{
           height: props.height
         }}

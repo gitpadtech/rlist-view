@@ -6,8 +6,27 @@
 
 .rlist-view-component__refresh {
   position: absolute;
+  left: 0;
+  width: 100%;
 }
 
 .ease-out-transion {
+  -webkit-transition: transform .2s ease-out;
   transition: transform .2s ease-out;
+}
+
+/* local scroll can't scroll on ios */
+.ios-local-scroll-fix:before {
+  content: "";
+  width: 1px;
+  float: left;
+  height: -webkit-calc(100% + 3px);
+  height: calc(100% + 3px);
+  margin-left: -1px;
+}
+
+.ios-local-scroll-fix:after {
+  content: "";
+  width: 100%;
+  clear: both;
 }

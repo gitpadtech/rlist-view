@@ -6,6 +6,10 @@ html, body {
   padding: 15px;
 }
 
+.news-item:first-child {
+  padding-top: 0;
+}
+
 .news-item__content {
   font-size: 14px;
 }
