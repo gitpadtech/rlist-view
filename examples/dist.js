@@ -22320,6 +22320,7 @@ var NewsList = function (_Component) {
       list: []
     };
     _this.refresh = _this.refresh.bind(_this);
+    _this.loadMore = _this.loadMore.bind(_this);
     return _this;
   }
 
@@ -22327,13 +22328,28 @@ var NewsList = function (_Component) {
     key: 'componentDidMount',
     value: function componentDidMount() {}
   }, {
+    key: 'fetch',
+    value: function (_fetch) {
+      function fetch() {
+        return _fetch.apply(this, arguments);
+      }
+
+      fetch.toString = function () {
+        return _fetch.toString();
+      };
+
+      return fetch;
+    }(function () {
+      return fetch('list.json').then(function (res) {
+        return res.json();
+      });
+    })
+  }, {
     key: 'refresh',
     value: function refresh() {
       var _this2 = this;
 
-      return fetch('list.json').then(function (res) {
-        return res.json();
-      }).then(function (res) {
+      return this.fetch().then(function (res) {
         return new Promise(function (resolve, reject) {
           setTimeout(function () {
             return resolve(res);
@@ -22349,6 +22365,26 @@ var NewsList = function (_Component) {
       });
     }
   }, {
+    key: 'loadMore',
+    value: function loadMore() {
+      var _this3 = this;
+
+      return this.fetch().then(function (res) {
+        return new Promise(function (resolve, reject) {
+          setTimeout(function () {
+            return resolve(res);
+          }, 1000);
+        });
+      }).then(function (res) {
+        res.forEach(function (raw) {
+          return raw.id = _shortid2.default.generate();
+        });
+        _this3.setState({
+          list: _this3.state.list.concat(shuffle(res))
+        });
+      });
+    }
+  }, {
     key: 'render',
     value: function render() {
       var state = this.state;
@@ -22360,7 +22396,8 @@ var NewsList = function (_Component) {
           {
             refreshComponent: _index.SpinnerRefresh,
             height: window.innerHeight,
-            refresh: this.refresh
+            refresh: this.refresh,
+            loadMore: this.loadMore
           },
           state.list.map(function (item) {
             return _react2.default.createElement(
@@ -22589,13 +22626,16 @@ var RListView = function (_Component) {
     _this.onTouchStart = _this.onTouchStart.bind(_this);
     _this.onTouchMove = _this.onTouchMove.bind(_this);
     _this.onTouchEnd = _this.onTouchEnd.bind(_this);
+    _this.onScroll = _this.onScroll.bind(_this);
 
     _this.startYPos = 0;
     _this.prevYPos = 0;
     _this.rootDom = null;
     _this.refreshDom = null;
+    _this.scrollTarget = null;
     _this.isRefreshing = true;
     _this.isPulling = false;
+    _this.isLoadingMore = false;
     return _this;
   }
 
@@ -22608,8 +22648,14 @@ var RListView = function (_Component) {
       this.setState({
         topPosition: -this.refreshDom.clientHeight
       });
-
+      // init refresh
       this.refresh(false);
+
+      if (this.props.useWindowScroll) {
+        this.listendScroll(window);
+      } else {
+        this.listendScroll(this.rootDom);
+      }
     }
   }, {
     key: 'onTouchStart',
@@ -22647,6 +22693,29 @@ var RListView = function (_Component) {
       this.isPulling = false;
     }
   }, {
+    key: 'onScroll',
+    value: function onScroll() {
+      var _this2 = this;
+
+      if (this.isLoadingMore) return;
+      if (this.arriveBottom()) {
+        this.isLoadingMore = true;
+        this.props.loadMore().then(function () {
+          return _this2.isLoadingMore = false;
+        });
+      }
+    }
+  }, {
+    key: 'arriveBottom',
+    value: function arriveBottom() {
+      var props = this.props;
+      var target = this.scrollTarget;
+      var visibleHeight = props.useWindowScroll ? window.innerHeight : target.clientHeight;
+      var scrollTop = props.useWindowScroll ? window.pageYOffset : target.scrollTop;
+      var scrollHeight = props.useWindowScroll ? document.documentElement.scrollHeight : target.scrollHeight;
+      return scrollHeight - (scrollTop + visibleHeight) <= props.threshold;
+    }
+  }, {
     key: 'calcDistance',
     value: function calcDistance(distance) {
       return distance / 3;
@@ -22654,7 +22723,7 @@ var RListView = function (_Component) {
   }, {
     key: 'refresh',
     value: function refresh() {
-      var _this2 = this;
+      var _this3 = this;
 
       var transition = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
 
@@ -22666,8 +22735,8 @@ var RListView = function (_Component) {
 
       this.isRefreshing = true;
       props.refresh().then(function () {
-        _this2.resetPosition();
-        _this2.isRefreshing = false;
+        _this3.resetPosition();
+        _this3.isRefreshing = false;
       });
     }
   }, {
@@ -22679,9 +22748,15 @@ var RListView = function (_Component) {
       });
     }
   }, {
+    key: 'listendScroll',
+    value: function listendScroll(target) {
+      this.scrollTarget = target;
+      target.addEventListener('scroll', this.onScroll);
+    }
+  }, {
     key: 'render',
     value: function render() {
-      var _this3 = this;
+      var _this4 = this;
 
       var props = this.props;
       var state = this.state;
@@ -22695,7 +22770,7 @@ var RListView = function (_Component) {
             height: props.height
           },
           ref: function ref(_ref2) {
-            return _this3.rootDom = _ref2;
+            return _this4.rootDom = _ref2;
           },
           onTouchStart: this.onTouchStart,
           onTouchEnd: this.onTouchEnd
@@ -22704,7 +22779,7 @@ var RListView = function (_Component) {
           'div',
           {
             ref: function ref(_ref) {
-              return _this3.refreshDom = _ref;
+              return _this4.refreshDom = _ref;
             },
             className: (0, _classnames2.default)('rlist-view-component__refresh', {
               'ease-out-transion': state.transition
@@ -22755,18 +22830,17 @@ exports.default = RListView;
 
 
 RListView.defaultProps = {
-  refresh: function refresh() {
-    console.log('loading...please wait for 2 second.');
-    return new Promise(function (resolve, reject) {
-      setTimeout(resolve, 2000);
-    });
-  }
+  threshold: 10,
+  useWindowScroll: false
 };
 
 RListView.propTypes = {
   height: _propTypes2.default.number.isRequired,
   refresh: _propTypes2.default.func.isRequired,
-  refreshComponent: _propTypes2.default.func.isRequired
+  refreshComponent: _propTypes2.default.func.isRequired,
+  threshold: _propTypes2.default.number,
+  useWindowScroll: _propTypes2.default.bool,
+  loadMore: _propTypes2.default.func.isRequired
 };
 
 /***/ }),
