@@ -6,22 +6,33 @@ export class SpinnerRefresh extends Component {
   constructor(props) {
     super(props);
   }
+  conditionRender() {
+    const props = this.props;
 
+    if (props.isRefreshing) {
+      return (
+        <div
+          className="spinner-refresh__animation"
+        >
+          <div className="spinner-refresh__loader" />
+        </div>
+      );
+    }
+    return (
+      <div className="spinner-refresh__text">
+        { props.progress >= 100 ? '松手更新...' : '下拉更新...' }
+      </div>
+    )
+  }
   render() {
     const props = this.props;
     return (
       <div
         className="spinner-refresh"
       >
-        <div
-          className="spinner-refresh__is-refreshing"
-          style={{
-            display: props.isRefreshing ? 'block' : 'none'
-          }}
-        >
-          正在刷新...
-        </div>
-        {props.progress}%
+        {
+          this.conditionRender()
+        }
       </div>
     );
   }

@@ -80,7 +80,6 @@ export default class RListView extends Component {
   }
   get progress() {
     if (this.refreshDom) {
-      console.log(this.state.translateY / this.refreshDom.clientHeight * 100);
       return Math.min(this.state.translateY / this.refreshDom.clientHeight * 100, 100)
     }
     return 0;
