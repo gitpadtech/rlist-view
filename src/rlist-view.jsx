@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import classNames from 'classnames';
 import PropTypes from 'prop-types'
-import './index.css';
-import RefreshComponent from './refresh-component';
+import './rlist-view.css';
 
 function isDragDown(prevY, curY) {
   return curY - prevY > 0;
@@ -30,6 +29,7 @@ export default class RListView extends Component {
     this.rootDom = null;
     this.refreshDom = null;
     this.isRefreshing = true;
+    this.isPulling = false;
   }
   componentDidMount() {
     this.rootDom.addEventListener('touchmove', this.onTouchMove, false);
@@ -45,33 +45,45 @@ export default class RListView extends Component {
     this.startYPos = this.prevYPos = e.touches[0].pageY;
   }
   onTouchMove(e) {
+    // do noting when is refreshing
     if (this.isRefreshing) return;
+    
     const curYpos = e.touches[0].pageY;
     const scrollTop = this.rootDom.scrollTop
 
-    if (scrollTop === 0 && isDragDown(this.prevYPos, curYpos)) {
+    if (
+      (scrollTop === 0 && isDragDown(this.prevYPos, curYpos)) || this.isPulling
+    ) {
       e.preventDefault();
       this.setState({
         translateY: this.calcDistance(curYpos - this.startYPos),
         transition: false
       });
+      this.isPulling = true;
     }
-
     this.prevYPos = curYpos
   }
   onTouchEnd() {
     if (this.isRefreshing) return;
-    if (this.shouldRefresh()) {
+    if (this.shouldRefresh) {
       this.refresh();
     } else {
       this.resetPosition();
     }
+    this.isPulling = false;
   }
   calcDistance(distance) {
     return distance / 3;
   }
-  shouldRefresh() {
+  get shouldRefresh() {
     return this.state.translateY >= this.refreshDom.clientHeight;
+  }
+  get progress() {
+    if (this.refreshDom) {
+      console.log(this.state.translateY / this.refreshDom.clientHeight * 100);
+      return Math.min(this.state.translateY / this.refreshDom.clientHeight * 100, 100)
+    }
+    return 0;
   }
   refresh(transition = true) {
     const props = this.props;
@@ -119,7 +131,12 @@ export default class RListView extends Component {
             top: `${state.topPosition}px`
           }}
         >
-          { props.refreshComponent }
+          {
+            React.createElement(props.refreshComponent, {
+              isRefreshing: this.isRefreshing,
+              progress: this.progress
+            })
+          }
         </div>
 
         <div
@@ -138,7 +155,6 @@ export default class RListView extends Component {
 }
 
 RListView.defaultProps = {
-  refreshComponent: <RefreshComponent />,
   refresh: function() {
     console.log('loading...please wait for 2 second.');
     return new Promise((resolve, reject) => {
@@ -150,5 +166,5 @@ RListView.defaultProps = {
 RListView.propTypes = {
   height: PropTypes.number.isRequired,
   refresh: PropTypes.func.isRequired,
-  refreshComponent: PropTypes.element
+  refreshComponent: PropTypes.func.isRequired
 }

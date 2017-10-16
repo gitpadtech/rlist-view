@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './news-list.css';
-import RListView from '../../src/index';
+import RListView, { SpinnerRefresh } from '../../src/index';
+import moduleName from '../../src/';
 import shortid from 'shortid';
 
 function shuffle(a) {
@@ -26,7 +27,7 @@ export default class NewsList extends Component {
       .then(res => res.json())
       .then(res => {
         return new Promise((resolve, reject) => {
-          setTimeout(() => resolve(res), 1000);
+          setTimeout(() => resolve(res), 5000);
         });
       })
       .then(res => {
@@ -41,6 +42,7 @@ export default class NewsList extends Component {
     return (
       <div>
         <RListView
+          refreshComponent={SpinnerRefresh}
           height={window.innerHeight}
           refresh={this.refresh}
         >
