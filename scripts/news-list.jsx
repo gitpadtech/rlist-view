@@ -27,7 +27,7 @@ export default class NewsList extends Component {
       .then(res => res.json())
       .then(res => {
         return new Promise((resolve, reject) => {
-          setTimeout(() => resolve(res), 5000);
+          setTimeout(() => resolve(res), 1000);
         });
       })
       .then(res => {

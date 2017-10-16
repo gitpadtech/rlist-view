@@ -22337,7 +22337,7 @@ var NewsList = function (_Component) {
         return new Promise(function (resolve, reject) {
           setTimeout(function () {
             return resolve(res);
-          }, 5000);
+          }, 1000);
         });
       }).then(function (res) {
         res.forEach(function (raw) {
@@ -22742,7 +22742,6 @@ var RListView = function (_Component) {
     key: 'progress',
     get: function get() {
       if (this.refreshDom) {
-        console.log(this.state.translateY / this.refreshDom.clientHeight * 100);
         return Math.min(this.state.translateY / this.refreshDom.clientHeight * 100, 100);
       }
       return 0;
@@ -23161,6 +23160,26 @@ var SpinnerRefresh = exports.SpinnerRefresh = function (_Component) {
   }
 
   _createClass(SpinnerRefresh, [{
+    key: 'conditionRender',
+    value: function conditionRender() {
+      var props = this.props;
+
+      if (props.isRefreshing) {
+        return _react2.default.createElement(
+          'div',
+          {
+            className: 'spinner-refresh__animation'
+          },
+          _react2.default.createElement('div', { className: 'spinner-refresh__loader' })
+        );
+      }
+      return _react2.default.createElement(
+        'div',
+        { className: 'spinner-refresh__text' },
+        props.progress >= 100 ? '松手更新...' : '下拉更新...'
+      );
+    }
+  }, {
     key: 'render',
     value: function render() {
       var props = this.props;
@@ -23169,18 +23188,7 @@ var SpinnerRefresh = exports.SpinnerRefresh = function (_Component) {
         {
           className: 'spinner-refresh'
         },
-        _react2.default.createElement(
-          'div',
-          {
-            className: 'spinner-refresh__is-refreshing',
-            style: {
-              display: props.isRefreshing ? 'block' : 'none'
-            }
-          },
-          '\u6B63\u5728\u5237\u65B0...'
-        ),
-        props.progress,
-        '%'
+        this.conditionRender()
       );
     }
   }]);
@@ -23235,7 +23243,7 @@ exports = module.exports = __webpack_require__(17)(undefined);
 
 
 // module
-exports.push([module.i, ".spinner-refresh {\n  padding: 15px;\n  text-align: center;\n  background: red;\n  height: 50px;\n}", ""]);
+exports.push([module.i, ".spinner-refresh {\n  text-align: center;\n  position: relative;\n  height: 40px;\n}\n.spinner-refresh__animation {\n  position: absolute;\n  bottom: 30px;\n  width: 100%;\n}\n.spinner-refresh__text {\n  position: absolute;\n  bottom: 10px;\n  width: 100%;\n  font-size: 12px;\n}\n.spinner-refresh__loader,\n.spinner-refresh__loader:before,\n.spinner-refresh__loader:after {\n  border-radius: 50%;\n  width: 1.5em;\n  height: 1.5em;\n  -webkit-animation-fill-mode: both;\n  animation-fill-mode: both;\n  -webkit-animation: load7 1.8s infinite ease-in-out;\n  animation: load7 1.8s infinite ease-in-out;\n}\n.spinner-refresh__loader {\n  color: #fc5359;\n  font-size: 10px;\n  margin: 0 auto;\n  position: relative;\n  text-indent: -9999em;\n  -webkit-transform: translateZ(0);\n  -ms-transform: translateZ(0);\n  transform: translateZ(0);\n  -webkit-animation-delay: -0.16s;\n  animation-delay: -0.16s;\n}\n.spinner-refresh__loader:before,\n.spinner-refresh__loader:after {\n  content: '';\n  position: absolute;\n  top: 0;\n}\n.spinner-refresh__loader:before {\n  left: -2em;\n  -webkit-animation-delay: -0.32s;\n  animation-delay: -0.32s;\n}\n.spinner-refresh__loader:after {\n  left: 2em;\n}\n@-webkit-keyframes load7 {\n  0%,\n  80%,\n  100% {\n    box-shadow: 0 1.5em 0 -1.3em;\n  }\n  40% {\n    box-shadow: 0 1.5em 0 0;\n  }\n}\n@keyframes load7 {\n  0%,\n  80%,\n  100% {\n    box-shadow: 0 1.5em 0 -1.3em;\n  }\n  40% {\n    box-shadow: 0 1.5em 0 0;\n  }\n}\n", ""]);
 
 // exports
 
