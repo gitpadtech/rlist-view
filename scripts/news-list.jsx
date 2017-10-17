@@ -62,7 +62,7 @@ export default class NewsList extends Component {
         <RListView
           refreshComponent={SpinnerRefresh}
           loadMoreComponent={TextLoadmore}
-          height={window.innerHeight}
+          height={`${window.innerHeight}px`}
           refresh={this.refresh}
           loadMore={this.loadMore}
         >
