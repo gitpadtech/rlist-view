@@ -22763,6 +22763,10 @@ var _propTypes2 = _interopRequireDefault(_propTypes);
 
 __webpack_require__(48);
 
+var _before = __webpack_require__(60);
+
+var _before2 = _interopRequireDefault(_before);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -22796,9 +22800,16 @@ var RListView = function (_Component) {
     };
     // bind this
     _this.onTouchStart = _this.onTouchStart.bind(_this);
-    _this.onTouchMove = _this.onTouchMove.bind(_this);
+
+    _this.onTouchMove = (0, _before2.default)(function () {
+      return !this.props.disableRefresh;
+    }, _this.onTouchMove).bind(_this);
+
     _this.onTouchEnd = _this.onTouchEnd.bind(_this);
-    _this.onScroll = _this.onScroll.bind(_this);
+
+    _this.onScroll = (0, _before2.default)(function () {
+      return !this.props.disableInfiniteScroll;
+    }, _this.onScroll).bind(_this);
 
     _this.startYPos = 0;
     _this.prevYPos = 0;
@@ -22869,12 +22880,13 @@ var RListView = function (_Component) {
       var _this2 = this;
 
       var state = this.state;
+      var props = this.props;
       if (state.isLoadingMore) return;
       if (this.arriveBottom()) {
         this.setState({
           isLoadingMore: true
         });
-        this.props.loadMore().then(function () {
+        props.loadMore().then(function () {
           return _this2.setState({
             isLoadingMore: false
           });
@@ -23008,7 +23020,9 @@ exports.default = RListView;
 
 RListView.defaultProps = {
   threshold: 10,
-  useWindowScroll: false
+  useWindowScroll: false,
+  disableInfiniteScroll: false,
+  disableRefresh: false
 };
 
 RListView.propTypes = {
@@ -23018,7 +23032,9 @@ RListView.propTypes = {
   loadMoreComponent: _propTypes2.default.func.isRequired,
   threshold: _propTypes2.default.number,
   useWindowScroll: _propTypes2.default.bool,
-  loadMore: _propTypes2.default.func.isRequired
+  loadMore: _propTypes2.default.func.isRequired,
+  disableInfiniteScroll: _propTypes2.default.bool,
+  disableRefresh: _propTypes2.default.bool
 };
 
 /***/ }),
@@ -23414,6 +23430,29 @@ exports.push([module.i, ".text-load-more {\n  font-size: 12px;\n  color: #a1a1a1
 
 // exports
 
+
+/***/ }),
+/* 60 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+exports.default = function (before, next) {
+  return function () {
+    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    if (before.apply(this, args)) {
+      next.apply(this, args);
+    }
+  };
+};
 
 /***/ })
 /******/ ]);
