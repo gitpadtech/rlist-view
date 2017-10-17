@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './news-list.css';
-import RListView, { SpinnerRefresh } from '../../src/index';
+import RListView, { SpinnerRefresh, TextLoadmore } from '../../src/index';
 import moduleName from '../../src/';
 import shortid from 'shortid';
 
@@ -61,6 +61,7 @@ export default class NewsList extends Component {
       <div>
         <RListView
           refreshComponent={SpinnerRefresh}
+          loadMoreComponent={TextLoadmore}
           height={window.innerHeight}
           refresh={this.refresh}
           loadMore={this.loadMore}

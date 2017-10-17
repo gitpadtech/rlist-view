@@ -17,7 +17,8 @@ export default class RListView extends Component {
     this.state = {
       translateY: 0,
       transition: false,
-      topPosition: 100
+      topPosition: 100,
+      isLoadingMore: false
     };
     // bind this
     this.onTouchStart = this.onTouchStart.bind(this);
@@ -32,7 +33,6 @@ export default class RListView extends Component {
     this.scrollTarget = null;
     this.isRefreshing = true;
     this.isPulling = false;
-    this.isLoadingMore = false;
   }
   componentDidMount() {
     this.rootDom.addEventListener('touchmove', this.onTouchMove, false);
@@ -82,11 +82,16 @@ export default class RListView extends Component {
     this.isPulling = false;
   }
   onScroll() {
-    if (this.isLoadingMore) return;
+    const state = this.state;
+    if (state.isLoadingMore) return;
     if (this.arriveBottom()) {
-      this.isLoadingMore = true;
+      this.setState({
+        isLoadingMore: true
+      });
       this.props.loadMore()
-        .then(() => this.isLoadingMore = false);
+        .then(() => this.setState({
+          isLoadingMore: false
+        }));
     }
   }
   arriveBottom() {
@@ -176,6 +181,9 @@ export default class RListView extends Component {
           }}
         >
           { props.children }
+          {
+            state.isLoadingMore ? React.createElement(props.loadMoreComponent) : null
+          }
         </div>
       </div>
     );
@@ -191,6 +199,7 @@ RListView.propTypes = {
   height: PropTypes.number.isRequired,
   refresh: PropTypes.func.isRequired,
   refreshComponent: PropTypes.func.isRequired,
+  loadMoreComponent: PropTypes.func.isRequired,
   threshold: PropTypes.number,
   useWindowScroll: PropTypes.bool,
   loadMore: PropTypes.func.isRequired
