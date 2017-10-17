@@ -22410,7 +22410,7 @@ var NewsList = function (_Component) {
           {
             refreshComponent: _index.SpinnerRefresh,
             loadMoreComponent: _index.TextLoadmore,
-            height: window.innerHeight,
+            height: window.innerHeight + 'px',
             refresh: this.refresh,
             loadMore: this.loadMore
           },
@@ -22868,7 +22868,7 @@ RListView.defaultProps = {
 };
 
 RListView.propTypes = {
-  height: _propTypes2.default.number.isRequired,
+  height: _propTypes2.default.string.isRequired,
   refresh: _propTypes2.default.func.isRequired,
   refreshComponent: _propTypes2.default.func.isRequired,
   loadMoreComponent: _propTypes2.default.func.isRequired,

@@ -208,7 +208,7 @@ RListView.defaultProps = {
 };
 
 RListView.propTypes = {
-  height: PropTypes.number.isRequired,
+  height: PropTypes.string.isRequired,
   refresh: PropTypes.func.isRequired,
   refreshComponent: PropTypes.func.isRequired,
   loadMoreComponent: PropTypes.func.isRequired,
