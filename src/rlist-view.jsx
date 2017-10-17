@@ -13,7 +13,7 @@ function isIphone() {
   return /iphone/i.test(window.navigator.userAgent);
 }
 
-export default class RListView extends Component {
+export class RListView extends Component {
   constructor(props) {
     super(props);
     this.state = {

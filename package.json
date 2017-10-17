@@ -1,13 +1,8 @@
 {
   "name": "rlist-view",
-  "version": "0.0.1",
+  "version": "0.8.0",
   "description": "",
   "main": "dist/index.js",
-  "directories": {
-    "src": "src",
-    "dist": "dist",
-    "example": "examples"
-  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "prepublish": "webpack --config ./webpack.production.js",
@@ -15,10 +10,17 @@
     "watch": "webpack --config ./webpack.development.js --watch",
     "ghpages": "git subtree push --prefix examples/ origin gh-pages"
   },
-  "keywords": [],
-  "repository": {},
+  "keywords": [
+    "react",
+    "pull refresh",
+    "infinite scroll",
+    "list view"
+  ],
+  "homepage": "https://github.com/gitpadtech/rlist-view",
+  "repository": "gitpadtech/rlist-view",
   "license": "MIT",
   "bugs": {},
+  "author": "yeluoqiuzhi <827884374@qq.com>",
   "devDependencies": {
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",
