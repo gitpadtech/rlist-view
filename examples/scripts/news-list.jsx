@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './news-list.css';
-import RListView, { SpinnerRefresh, TextLoadmore } from '../../src/index';
+import { RListView, SpinnerRefresh, TextLoadmore } from '../../src/index';
 import moduleName from '../../src/';
 import shortid from 'shortid';
 
