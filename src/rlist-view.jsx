@@ -3,6 +3,8 @@ import classNames from 'classnames';
 import PropTypes from 'prop-types'
 import './rlist-view.css';
 
+import before from './fn/before';
+
 function isDragDown(prevY, curY) {
   return curY - prevY > 0;
 }
@@ -22,9 +24,16 @@ export default class RListView extends Component {
     };
     // bind this
     this.onTouchStart = this.onTouchStart.bind(this);
-    this.onTouchMove = this.onTouchMove.bind(this);
+
+    this.onTouchMove = before(function() {
+      return !this.props.disableRefresh;
+    }, this.onTouchMove).bind(this);
+
     this.onTouchEnd = this.onTouchEnd.bind(this);
-    this.onScroll = this.onScroll.bind(this);
+
+    this.onScroll = before(function() {
+      return !this.props.disableInfiniteScroll;
+    }, this.onScroll).bind(this);
 
     this.startYPos = 0;
     this.prevYPos = 0;
@@ -83,12 +92,13 @@ export default class RListView extends Component {
   }
   onScroll() {
     const state = this.state;
+    const props = this.props;
     if (state.isLoadingMore) return;
     if (this.arriveBottom()) {
       this.setState({
         isLoadingMore: true
       });
-      this.props.loadMore()
+      props.loadMore()
         .then(() => this.setState({
           isLoadingMore: false
         }));
@@ -192,7 +202,9 @@ export default class RListView extends Component {
 
 RListView.defaultProps = {
   threshold: 10,
-  useWindowScroll: false
+  useWindowScroll: false,
+  disableInfiniteScroll: false,
+  disableRefresh: false,
 };
 
 RListView.propTypes = {
@@ -202,5 +214,7 @@ RListView.propTypes = {
   loadMoreComponent: PropTypes.func.isRequired,
   threshold: PropTypes.number,
   useWindowScroll: PropTypes.bool,
-  loadMore: PropTypes.func.isRequired
+  loadMore: PropTypes.func.isRequired,
+  disableInfiniteScroll: PropTypes.bool,
+  disableRefresh: PropTypes.bool
 }
