@@ -22692,7 +22692,6 @@ var RListView = exports.RListView = function (_Component) {
   }, {
     key: 'onTouchMove',
     value: function onTouchMove(e) {
-      console.log('ref');
       // do noting when is refreshing
       if (this.isRefreshing) return;
 
