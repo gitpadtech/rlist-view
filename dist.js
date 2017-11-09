@@ -22643,14 +22643,14 @@ var RListView = exports.RListView = function (_Component) {
       topPosition: 100,
       isLoadingMore: false
     };
-    // bind this
-    _this.onTouchStart = _this.onTouchStart.bind(_this);
-
-    _this.onTouchMove = (0, _before2.default)(function () {
+    function disableRefreshBefore() {
       return !this.props.disableRefresh;
-    }, _this.onTouchMove).bind(_this);
+    }
+    _this.onTouchStart = (0, _before2.default)(disableRefreshBefore, _this.onTouchStart).bind(_this);
 
-    _this.onTouchEnd = _this.onTouchEnd.bind(_this);
+    _this.onTouchMove = (0, _before2.default)(disableRefreshBefore, _this.onTouchMove).bind(_this);
+
+    _this.onTouchEnd = (0, _before2.default)(disableRefreshBefore, _this.onTouchEnd).bind(_this);
 
     _this.onScroll = (0, _before2.default)(function () {
       return !this.props.disableInfiniteScroll;
@@ -22692,6 +22692,7 @@ var RListView = exports.RListView = function (_Component) {
   }, {
     key: 'onTouchMove',
     value: function onTouchMove(e) {
+      console.log('ref');
       // do noting when is refreshing
       if (this.isRefreshing) return;
 
@@ -22822,7 +22823,7 @@ var RListView = exports.RListView = function (_Component) {
               top: state.topPosition + 'px'
             }
           },
-          _react2.default.createElement(props.refreshComponent, {
+          props.disableRefresh ? null : _react2.default.createElement(props.refreshComponent, {
             isRefreshing: this.isRefreshing,
             progress: this.progress
           })
@@ -22864,17 +22865,23 @@ RListView.defaultProps = {
   threshold: 10,
   useWindowScroll: false,
   disableInfiniteScroll: false,
-  disableRefresh: false
+  disableRefresh: false,
+  refresh: function refresh() {
+    return Promise.resolve();
+  },
+  loadMore: function loadMore() {
+    return Promise.resolve();
+  }
 };
 
 RListView.propTypes = {
   height: _propTypes2.default.string.isRequired,
-  refresh: _propTypes2.default.func.isRequired,
+  refresh: _propTypes2.default.func,
+  loadMore: _propTypes2.default.func,
   refreshComponent: _propTypes2.default.func.isRequired,
   loadMoreComponent: _propTypes2.default.func.isRequired,
   threshold: _propTypes2.default.number,
   useWindowScroll: _propTypes2.default.bool,
-  loadMore: _propTypes2.default.func.isRequired,
   disableInfiniteScroll: _propTypes2.default.bool,
   disableRefresh: _propTypes2.default.bool
 };
