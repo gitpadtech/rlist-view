@@ -22,14 +22,14 @@ export class RListView extends Component {
       topPosition: 100,
       isLoadingMore: false
     };
-    // bind this
-    this.onTouchStart = this.onTouchStart.bind(this);
-
-    this.onTouchMove = before(function() {
+    function disableRefreshBefore() {
       return !this.props.disableRefresh;
-    }, this.onTouchMove).bind(this);
+    }
+    this.onTouchStart = before(disableRefreshBefore, this.onTouchStart).bind(this);
 
-    this.onTouchEnd = this.onTouchEnd.bind(this);
+    this.onTouchMove = before(disableRefreshBefore, this.onTouchMove).bind(this);
+
+    this.onTouchEnd = before(disableRefreshBefore, this.onTouchEnd).bind(this);
 
     this.onScroll = before(function() {
       return !this.props.disableInfiniteScroll;
@@ -63,6 +63,7 @@ export class RListView extends Component {
     this.startYPos = this.prevYPos = e.touches[0].pageY;
   }
   onTouchMove(e) {
+    console.log('ref');
     // do noting when is refreshing
     if (this.isRefreshing) return;
     
@@ -175,10 +176,11 @@ export class RListView extends Component {
           }}
         >
           {
-            React.createElement(props.refreshComponent, {
-              isRefreshing: this.isRefreshing,
-              progress: this.progress
-            })
+            props.disableRefresh ? null :
+              React.createElement(props.refreshComponent, {
+                isRefreshing: this.isRefreshing,
+                progress: this.progress
+              })
           }
         </div>
 
@@ -205,16 +207,18 @@ RListView.defaultProps = {
   useWindowScroll: false,
   disableInfiniteScroll: false,
   disableRefresh: false,
+  refresh: () => Promise.resolve(),
+  loadMore: () => Promise.resolve(),
 };
 
 RListView.propTypes = {
   height: PropTypes.string.isRequired,
-  refresh: PropTypes.func.isRequired,
+  refresh: PropTypes.func,
+  loadMore: PropTypes.func,
   refreshComponent: PropTypes.func.isRequired,
   loadMoreComponent: PropTypes.func.isRequired,
   threshold: PropTypes.number,
   useWindowScroll: PropTypes.bool,
-  loadMore: PropTypes.func.isRequired,
   disableInfiniteScroll: PropTypes.bool,
   disableRefresh: PropTypes.bool
 }
