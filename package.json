@@ -1,5 +1,5 @@
 {
-  "name": "rlist-view",
+  "name": "@gitpad/rlist-view",
   "version": "0.8.2",
   "description": "",
   "main": "dist/index.js",
@@ -8,7 +8,8 @@
     "prepublish": "webpack --config ./webpack.production.js",
     "build": "webpack --config ./webpack.production.js",
     "watch": "webpack --config ./webpack.development.js --watch",
-    "ghpages": "git subtree push --prefix examples/ origin gh-pages"
+    "ghpages": "git subtree push --prefix examples/ origin gh-pages",
+    "pub": "npm publish --access public"
   },
   "keywords": [
     "react",
