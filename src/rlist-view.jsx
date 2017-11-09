@@ -63,7 +63,6 @@ export class RListView extends Component {
     this.startYPos = this.prevYPos = e.touches[0].pageY;
   }
   onTouchMove(e) {
-    console.log('ref');
     // do noting when is refreshing
     if (this.isRefreshing) return;
     
