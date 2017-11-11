@@ -8,6 +8,7 @@
   position: absolute;
   left: 0;
   width: 100%;
+  /* hide refresh component when scroll bouncing */
   opacity: 0;
 }
 .rlist-view-component__refresh.active {
