@@ -173,6 +173,7 @@ export class RListView extends Component {
           })}
           style={{
             transform: `translate3d(0,0${state.translateY}px,0)`,
+            WebkitTransform: `translate3d(0,0${state.translateY}px,0)`,
             top: `${state.topPosition}px`
           }}
         >
@@ -190,7 +191,8 @@ export class RListView extends Component {
             'ease-out-transion': state.transition
           })}
           style={{
-            transform: `translate3d(0,0${state.translateY}px,0)`
+            transform: `translate3d(0,0${state.translateY}px,0)`,
+            WebkitTransform: `translate3d(0,0${state.translateY}px,0)`
           }}
         >
           { props.children }

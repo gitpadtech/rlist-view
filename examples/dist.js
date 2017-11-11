@@ -22821,6 +22821,7 @@ var RListView = exports.RListView = function (_Component) {
             }),
             style: {
               transform: 'translate3d(0,0' + state.translateY + 'px,0)',
+              WebkitTransform: 'translate3d(0,0' + state.translateY + 'px,0)',
               top: state.topPosition + 'px'
             }
           },
@@ -22836,7 +22837,8 @@ var RListView = exports.RListView = function (_Component) {
               'ease-out-transion': state.transition
             }),
             style: {
-              transform: 'translate3d(0,0' + state.translateY + 'px,0)'
+              transform: 'translate3d(0,0' + state.translateY + 'px,0)',
+              WebkitTransform: 'translate3d(0,0' + state.translateY + 'px,0)'
             }
           },
           props.children,
@@ -22982,7 +22984,7 @@ exports = module.exports = __webpack_require__(7)(undefined);
 
 
 // module
-exports.push([module.i, ".rlist-view-component {\n  overflow-y: scroll;\n  -webkit-overflow-scrolling: touch;\n  position: relative;\n}\n\n.rlist-view-component__refresh {\n  position: absolute;\n  left: 0;\n  width: 100%;\n  opacity: 0;\n}\n.rlist-view-component__refresh.active {\n  opacity: 1;\n}\n\n.ease-out-transion {\n  -webkit-transition: transform .2s ease-out;\n  transition: transform .2s ease-out;\n}\n\n/* local scroll can't scroll on ios */\n.ios-local-scroll-fix:before {\n  content: \"\";\n  width: 1px;\n  float: left;\n  height: -webkit-calc(100% + 3px);\n  height: calc(100% + 3px);\n  margin-left: -1px;\n}\n\n.ios-local-scroll-fix:after {\n  content: \"\";\n  width: 100%;\n  clear: both;\n}", ""]);
+exports.push([module.i, ".rlist-view-component {\n  overflow-y: scroll;\n  -webkit-overflow-scrolling: touch;\n  position: relative;\n}\n\n.rlist-view-component__refresh {\n  position: absolute;\n  left: 0;\n  width: 100%;\n  /* hide refresh component when scroll bouncing */\n  opacity: 0;\n}\n.rlist-view-component__refresh.active {\n  opacity: 1;\n}\n\n.ease-out-transion {\n  -webkit-transition: transform .2s ease-out;\n  -webkit-transition: -webkit-transform .2s ease-out;\n  transition: transform .2s ease-out;\n  transition: -webkit-transform .2s ease-out;\n}\n\n/* local scroll can't scroll on ios */\n.ios-local-scroll-fix:before {\n  content: \"\";\n  width: 1px;\n  float: left;\n  height: -webkit-calc(100% + 3px);\n  height: calc(100% + 3px);\n  margin-left: -1px;\n}\n\n.ios-local-scroll-fix:after {\n  content: \"\";\n  width: 100%;\n  clear: both;\n}", ""]);
 
 // exports
 
