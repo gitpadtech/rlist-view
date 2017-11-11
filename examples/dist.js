@@ -22815,7 +22815,9 @@ var RListView = exports.RListView = function (_Component) {
               return _this4.refreshDom = _ref;
             },
             className: (0, _classnames2.default)('rlist-view-component__refresh', {
-              'ease-out-transion': state.transition
+              'ease-out-transion': state.transition,
+              // show refresh component when not scroll bouncing
+              active: state.translateY > 0
             }),
             style: {
               transform: 'translate3d(0,0' + state.translateY + 'px,0)',
@@ -22980,7 +22982,7 @@ exports = module.exports = __webpack_require__(7)(undefined);
 
 
 // module
-exports.push([module.i, ".rlist-view-component {\n  overflow-y: scroll;\n  -webkit-overflow-scrolling: touch;\n  position: relative;\n}\n\n.rlist-view-component__refresh {\n  position: absolute;\n  left: 0;\n  width: 100%;\n}\n\n.ease-out-transion {\n  -webkit-transition: transform .2s ease-out;\n  transition: transform .2s ease-out;\n}\n\n/* local scroll can't scroll on ios */\n.ios-local-scroll-fix:before {\n  content: \"\";\n  width: 1px;\n  float: left;\n  height: -webkit-calc(100% + 3px);\n  height: calc(100% + 3px);\n  margin-left: -1px;\n}\n\n.ios-local-scroll-fix:after {\n  content: \"\";\n  width: 100%;\n  clear: both;\n}", ""]);
+exports.push([module.i, ".rlist-view-component {\n  overflow-y: scroll;\n  -webkit-overflow-scrolling: touch;\n  position: relative;\n}\n\n.rlist-view-component__refresh {\n  position: absolute;\n  left: 0;\n  width: 100%;\n  opacity: 0;\n}\n.rlist-view-component__refresh.active {\n  opacity: 1;\n}\n\n.ease-out-transion {\n  -webkit-transition: transform .2s ease-out;\n  transition: transform .2s ease-out;\n}\n\n/* local scroll can't scroll on ios */\n.ios-local-scroll-fix:before {\n  content: \"\";\n  width: 1px;\n  float: left;\n  height: -webkit-calc(100% + 3px);\n  height: calc(100% + 3px);\n  margin-left: -1px;\n}\n\n.ios-local-scroll-fix:after {\n  content: \"\";\n  width: 100%;\n  clear: both;\n}", ""]);
 
 // exports
 

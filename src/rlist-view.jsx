@@ -167,7 +167,9 @@ export class RListView extends Component {
         <div
           ref={ref => this.refreshDom = ref}
           className={classNames('rlist-view-component__refresh', {
-            'ease-out-transion': state.transition
+            'ease-out-transion': state.transition,
+            // show refresh component when not scroll bouncing
+            active: state.translateY > 0,
           })}
           style={{
             transform: `translate3d(0,0${state.translateY}px,0)`,
