@@ -155,7 +155,8 @@ export class RListView extends Component {
     return (
       <div
         className={classNames('rlist-view-component', {
-          'ios-local-scroll-fix': isIphone()
+          // TODO: remove in future
+          // 'ios-local-scroll-fix': isIphone()
         })}
         style={{
           height: props.height
