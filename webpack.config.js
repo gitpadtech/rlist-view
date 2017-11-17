@@ -8,7 +8,7 @@ module.exports = {
   entry: "./src/index",
   output: {
     path: path.join(__dirname, "./dist/"),
-    filename: "index.min.js",
+    filename: "index.js",
     library: ["rlist-view"],
     libraryTarget: "umd",
     publicPath: "/dist/"
@@ -38,6 +38,5 @@ module.exports = {
     }
   },
   plugins: [
-    new webpack.optimize.UglifyJsPlugin({minimize: true})
   ]
 };
