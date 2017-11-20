@@ -22,5 +22,5 @@ npm i @gitpad/rlist-view
 
 ## Who use rlist-view ?
 
-![股多多](docs/images/gdd-logo.jpg)
+![[股多多](docs/who-used.md)](docs/images/gdd-logo.jpg)
 
