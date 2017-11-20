@@ -20,8 +20,7 @@ npm i @gitpad/rlist-view
 * disableInfiniteScroll: close load more feature, when you have loaded all data, you should set this prop to true
 * disableRefresh: close refresh data feature
 
-## Who use rlist-view ?
+## [Who used rlist-view](docs/who-used.md) ?
 
 
-
-[![股多多](docs/images/gdd-logo.jpg)](docs/who-used.md)
+[![股多多](docs/images/gdd/logo.jpg)](https://itunes.apple.com/cn/app/%E8%82%A1%E5%A4%9A%E5%A4%9A/id1219179966?mt=8)
