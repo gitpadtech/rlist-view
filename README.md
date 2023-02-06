@@ -1,7 +1,6 @@
 # rlist-view
 
 
-
 ## install
 
 ```shell
